@@ -1,0 +1,38 @@
+# Dependencies and build output
+node_modules/
+dist/
+build/
+coverage/
+
+# Environment files and secrets (only the .env.example templates are committed)
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.crt
+secrets/
+*.secret
+*.secrets
+credentials*.json
+service-account*.json
+
+# Local database data (never commit)
+*.pgdata/
+pgdata/
+*.sqlite
+*.db
+
+# Logs, OS and editor files
+*.log
+npm-debug.log*
+.DS_Store
+Thumbs.db
+.vscode/*
+!.vscode/extensions.json
+.idea/
+
+# Archives (may contain .env)
+*.zip

@@ -1,0 +1,73 @@
+// Prisma schema – restaurant occupancy management system (spec section 7).
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum RestaurantType {
+  MEAT
+  DAIRY
+}
+
+model User {
+  id           String      @id @default(uuid()) @db.Uuid
+  fullName     String
+  /// Always stored lower-cased and trimmed, so uniqueness is case-insensitive.
+  email        String      @unique
+  passwordHash String
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  /// Zero or one restaurant per account. Owning one makes the user a manager.
+  restaurant   Restaurant?
+
+  @@map("users")
+}
+
+model Restaurant {
+  id          String         @id @default(uuid()) @db.Uuid
+  /// Unique => at most one restaurant per account.
+  ownerId     String         @unique @db.Uuid
+  owner       User           @relation(fields: [ownerId], references: [id], onDelete: Restrict)
+  name        String
+  ownerName   String
+  /// Optional; never returned to guests.
+  ownerPhone  String?
+  street      String
+  city        String
+  /// Free-text area / neighbourhood used for location filtering (e.g. "מרכז", "צפון", "פלורנטין").
+  location    String?
+  description String
+  type        RestaurantType
+  imageUrl    String?
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  tableGroups TableGroup[]
+
+  @@index([city])
+  @@index([type])
+  @@index([name])
+  @@map("restaurants")
+}
+
+model TableGroup {
+  id             String     @id @default(uuid()) @db.Uuid
+  restaurantId   String     @db.Uuid
+  restaurant     Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  /// Seats per table (> 0).
+  capacity       Int
+  /// Number of tables of this capacity (>= 0).
+  totalTables    Int
+  /// 0 <= occupiedTables <= totalTables.
+  occupiedTables Int        @default(0)
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+
+  /// No duplicate capacity groups within one restaurant.
+  @@unique([restaurantId, capacity])
+  @@map("table_groups")
+}
