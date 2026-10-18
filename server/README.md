@@ -359,7 +359,14 @@ npm test
 3. ממלאים את `CORS_ORIGIN` בכתובת הלקוח שנפרס (למשל `https://my-client.onrender.com`).
    את `JWT_SECRET` Render מייצר אוטומטית, ואת `DATABASE_URL` הוא מחבר מהמסד.
 4. בכל עלייה השירות מריץ `prisma migrate deploy`, והבדיקה הבריאותית היא `/api/health`.
-5. נתוני דוגמה (אופציונלי): ב־Shell של השירות, `npx prisma db seed`.
+5. נתוני דוגמה (אופציונלי). אין Shell בתוכנית החינמית, ולכן מריצים את ה־seed מהמחשב המקומי מול המסד בענן:
+   מעתיקים את **External Database URL** מעמוד המסד ב־Render, ואז ב־PowerShell בתיקייה `server`:
+   ```powershell
+   $env:DATABASE_URL = "<External Database URL>"
+   npx prisma db seed
+   Remove-Item Env:DATABASE_URL
+   ```
+   שימו לב: משתמשי הדוגמה עם הסיסמה `Password123!` יהיו זמינים לכל מי שמגיע לשרת.
 
 ### מגבלות של השירותים החינמיים (Render)
 
