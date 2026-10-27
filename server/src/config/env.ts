@@ -8,6 +8,8 @@ const envSchema = z.object({
   JWT_SECRET: z.string().min(16, 'JWT_SECRET must be set (at least 16 characters)'),
   JWT_EXPIRES_IN: z.string().min(1).default('1d'),
   CORS_ORIGIN: z.string().default('http://localhost:5173'),
+  /** Deployed client URL, allowed in addition to CORS_ORIGIN. */
+  CLIENT_URL: z.string().optional(),
 });
 
 const parsed = envSchema.safeParse(process.env);
@@ -21,7 +23,7 @@ if (!parsed.success) {
 
 export const env = parsed.data;
 
-/** Parsed list of allowed CORS origins ("*" allows any origin). */
-export const corsOrigins = env.CORS_ORIGIN.split(',')
-  .map((o) => o.trim())
+/** Parsed list of allowed CORS origins ("*" allows any origin), plus CLIENT_URL if set. */
+export const corsOrigins = [...env.CORS_ORIGIN.split(','), env.CLIENT_URL ?? '']
+  .map((o) => o.trim().replace(/\/+$/, ''))
   .filter(Boolean);
