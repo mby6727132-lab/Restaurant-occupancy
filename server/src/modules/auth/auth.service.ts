@@ -39,7 +39,17 @@ const emailExists = () =>
     suggestion: 'login',
   });
 
-export async function register(input: RegisterInput): Promise<PublicUser> {
+export interface AuthResult {
+  token: string;
+  user: PublicUser;
+}
+
+/** Shared by register and login: issues a JWT and shapes the user output. */
+function createSession(user: AuthUser): AuthResult {
+  return { token: signToken(user.id), user: toPublicUser(user) };
+}
+
+export async function register(input: RegisterInput): Promise<AuthResult> {
   const existing = await prisma.user.findUnique({ where: { email: input.email }, select: { id: true } });
   if (existing) throw emailExists();
 
@@ -48,7 +58,7 @@ export async function register(input: RegisterInput): Promise<PublicUser> {
     const user = await prisma.user.create({
       data: { fullName: input.fullName, email: input.email, passwordHash },
     });
-    return toPublicUser({ ...user, restaurantId: null });
+    return createSession({ ...user, restaurantId: null });
   } catch (err) {
     if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2002') throw emailExists();
     throw err;
@@ -58,7 +68,7 @@ export async function register(input: RegisterInput): Promise<PublicUser> {
 let dummyHash: Promise<string> | undefined;
 const getDummyHash = () => (dummyHash ??= hashPassword('dummy-password-for-timing'));
 
-export async function login(input: LoginInput): Promise<{ token: string; user: PublicUser }> {
+export async function login(input: LoginInput): Promise<AuthResult> {
   const user = await prisma.user.findUnique({
     where: { email: input.email },
     include: { restaurant: { select: { id: true } } },
@@ -67,8 +77,5 @@ export async function login(input: LoginInput): Promise<{ token: string; user: P
   const ok = await verifyPassword(input.password, user?.passwordHash ?? (await getDummyHash()));
   if (!user || !ok) throw unauthorized('INVALID_CREDENTIALS', 'Invalid email or password');
 
-  return {
-    token: signToken(user.id),
-    user: toPublicUser({ ...user, restaurantId: user.restaurant?.id ?? null }),
-  };
+  return createSession({ ...user, restaurantId: user.restaurant?.id ?? null });
 }

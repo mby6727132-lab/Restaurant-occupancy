@@ -197,14 +197,20 @@
           }
         }
       },
-      "LoginResponse": {
+      "AuthResponse": {
         "type": "object",
+        "description": "Returned by both register and login. Send the token as `Authorization: Bearer <token>`.",
+        "required": [
+          "user",
+          "token"
+        ],
         "properties": {
-          "token": {
-            "type": "string"
-          },
           "user": {
             "$ref": "#/components/schemas/User"
+          },
+          "token": {
+            "type": "string",
+            "description": "JWT with limited lifetime"
           }
         }
       },
@@ -702,7 +708,8 @@
         "tags": [
           "Auth"
         ],
-        "summary": "Register a new (regular) user",
+        "summary": "Register a new (regular) user and log them in",
+        "description": "Returns the same `{ user, token }` shape as login, so the client is logged in right after registering.",
         "security": [],
         "requestBody": {
           "required": true,
@@ -716,16 +723,11 @@
         },
         "responses": {
           "201": {
-            "description": "User created",
+            "description": "User created and logged in",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "user": {
-                      "$ref": "#/components/schemas/User"
-                    }
-                  }
+                  "$ref": "#/components/schemas/AuthResponse"
                 }
               }
             }
@@ -786,7 +788,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/LoginResponse"
+                  "$ref": "#/components/schemas/AuthResponse"
                 }
               }
             }

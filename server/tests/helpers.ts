@@ -18,16 +18,14 @@ export interface TestUser {
   token: string;
 }
 
-/** Registers and logs in a fresh user. */
+/** Registers a fresh user; registration already returns a token. */
 export async function createUser(fullName = 'Test User'): Promise<TestUser> {
   counter += 1;
   const email = `user${counter}_${Date.now()}@example.com`;
   const password = 'Password123!';
   const reg = await api().post('/api/auth/register').send({ fullName, email, password });
   if (reg.status !== 201) throw new Error(`register failed: ${reg.status} ${JSON.stringify(reg.body)}`);
-  const login = await api().post('/api/auth/login').send({ email, password });
-  if (login.status !== 200) throw new Error(`login failed: ${login.status}`);
-  return { id: reg.body.user.id, email, password, token: login.body.token };
+  return { id: reg.body.user.id, email, password, token: reg.body.token };
 }
 
 export const auth = (u: { token: string }) => ({ Authorization: `Bearer ${u.token}` });

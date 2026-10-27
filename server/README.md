@@ -167,7 +167,7 @@ server/
 |---|---|
 | סיסמה | 8–72 תווים (72 היא המגבלה של bcrypt). Hash עם bcrypt, cost 12 |
 | אימייל | עובר trim והמרה לאותיות קטנות לפני שמירה ובדיקה. ייחודי ללא תלות ברישיות |
-| הרשמה | מחזירה את המשתמש (201) **בלי** אסימון, לפי האפיון. הלקוח מבצע login אחרי הרשמה |
+| הרשמה | מחזירה (201) `{ user, token }`, באותו פורמט כמו login, כך שהמשתמש מחובר מיד אחרי ההרשמה. זו הרחבה מכוונת של האפיון, שמבקש להחזיר רק את המשתמש. ה־token נוצר באותה פונקציה (`createSession`) שמשמשת את login |
 | אימייל קיים | 409 עם `code: "EMAIL_EXISTS"` ו־`details: { suggestion: "login" }`, כדי שהלקוח יציע מעבר להתחברות |
 | login שגוי | 401 עם אותה הודעה לאימייל לא קיים ולסיסמה שגויה (מונע גילוי חשבונות) |
 | JWT | HS256, תוקף לפי `JWT_EXPIRES_IN` (ברירת מחדל יום). המשתמש נטען מהמסד בכל בקשה, ולכן אסימון של משתמש שנמחק נדחה והסטטוס (מנהל או משתמש רגיל) תמיד עדכני |
@@ -230,13 +230,13 @@ server/
 **הרשמה והתחברות**
 
 ```http
-POST /api/auth/register   { "fullName": "...", "email": "...", "password": "..." }   → 201 { user }
-POST /api/auth/login      { "email": "...", "password": "..." }                      → 200 { token, user }
+POST /api/auth/register   { "fullName": "...", "email": "...", "password": "..." }   → 201 { user, token }
+POST /api/auth/login      { "email": "...", "password": "..." }                      → 200 { user, token }
 GET  /api/auth/me                                                                    → 200 { user }
 ```
 
 `user` = `{ id, fullName, email, role: "USER" | "MANAGER", isManager, restaurantId, createdAt, updatedAt }`.
-אחרי login שומרים את ה־token. ב־`/me` משתמשים בטעינת האפליקציה כדי לדעת אם המשתמש מחובר ואם הוא מנהל.
+גם הרשמה וגם login מחזירות את אותו מבנה. בשני המקרים שומרים את ה־token, ואפשר להשתמש באותה פונקציה בלקוח. ב־`/me` משתמשים בטעינת האפליקציה כדי לדעת אם המשתמש מחובר ואם הוא מנהל.
 
 **כפתור "בעל מסעדה"**
 - אם `user.restaurantId === null`: מעבר לטופס יצירה (`POST /api/restaurants`).

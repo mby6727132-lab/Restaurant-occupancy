@@ -159,9 +159,11 @@ export const openApiDocument = {
           password: { type: 'string', example: 'Password123!' },
         },
       },
-      LoginResponse: {
+      AuthResponse: {
         type: 'object',
-        properties: { token: { type: 'string' }, user: ref('User') },
+        description: 'Returned by both register and login. Send the token as `Authorization: Bearer <token>`.',
+        required: ['user', 'token'],
+        properties: { user: ref('User'), token: { type: 'string', description: 'JWT with limited lifetime' } },
       },
       RestaurantType: { type: 'string', enum: ['MEAT', 'DAIRY'], description: 'MEAT = בשרי, DAIRY = חלבי' },
       TableGroupInput: {
@@ -341,11 +343,12 @@ export const openApiDocument = {
     '/api/auth/register': {
       post: {
         tags: ['Auth'],
-        summary: 'Register a new (regular) user',
+        summary: 'Register a new (regular) user and log them in',
+        description: 'Returns the same `{ user, token }` shape as login, so the client is logged in right after registering.',
         security: [],
         requestBody: { required: true, content: json(ref('RegisterRequest')) },
         responses: {
-          201: { description: 'User created', content: json({ type: 'object', properties: { user: ref('User') } }) },
+          201: { description: 'User created and logged in', content: json(ref('AuthResponse')) },
           400: errorResponse('Invalid data'),
           409: errorResponse('Email already registered (code EMAIL_EXISTS, details.suggestion = "login")'),
           500: errorResponse('Unexpected error'),
@@ -359,7 +362,7 @@ export const openApiDocument = {
         security: [],
         requestBody: { required: true, content: json(ref('LoginRequest')) },
         responses: {
-          200: { description: 'Logged in', content: json(ref('LoginResponse')) },
+          200: { description: 'Logged in', content: json(ref('AuthResponse')) },
           400: errorResponse('Invalid data'),
           401: errorResponse('Wrong email or password (code INVALID_CREDENTIALS)'),
           500: errorResponse('Unexpected error'),

@@ -31,6 +31,35 @@ describe('POST /api/auth/register', () => {
     expect(res.body.user).not.toHaveProperty('passwordHash');
   });
 
+  it('returns { user, token } – the same shape as login – with a token that works immediately', async () => {
+    const res = await api().post('/api/auth/register').send(body);
+    expect(res.status).toBe(201);
+    expect(Object.keys(res.body).sort()).toEqual(['token', 'user']);
+    expect(typeof res.body.token).toBe('string');
+
+    const decoded = jwt.decode(res.body.token) as jwt.JwtPayload;
+    expect(decoded.sub).toBe(res.body.user.id);
+    expect(decoded.exp).toBeGreaterThan(decoded.iat!); // limited lifetime, like login
+
+    const me = await api().get('/api/auth/me').set('Authorization', `Bearer ${res.body.token}`);
+    expect(me.status).toBe(200);
+    expect(me.body.user).toEqual(res.body.user);
+
+    const login = await api().post('/api/auth/login').send({ email: body.email, password: body.password });
+    expect(Object.keys(login.body).sort()).toEqual(Object.keys(res.body).sort());
+    expect(Object.keys(login.body.user).sort()).toEqual(Object.keys(res.body.user).sort());
+  });
+
+  it('does not return a token when registration fails', async () => {
+    await api().post('/api/auth/register').send(body);
+    const dup = await api().post('/api/auth/register').send(body);
+    expect(dup.status).toBe(409);
+    expect(dup.body).not.toHaveProperty('token');
+    const invalid = await api().post('/api/auth/register').send({ ...body, email: 'bad' });
+    expect(invalid.status).toBe(400);
+    expect(invalid.body).not.toHaveProperty('token');
+  });
+
   it('stores a bcrypt hash, not the plain password', async () => {
     await api().post('/api/auth/register').send(body);
     const user = await prisma.user.findUniqueOrThrow({ where: { email: 'israel@example.com' } });

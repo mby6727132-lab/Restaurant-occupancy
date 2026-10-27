@@ -8,8 +8,8 @@ export const authRouter = Router();
 
 authRouter.post('/register', async (req, res) => {
   const input = parseOrThrow(registerSchema, req.body);
-  const user = await authService.register(input);
-  res.status(201).json({ user });
+  const result = await authService.register(input);
+  res.status(201).json(result);
 });
 
 authRouter.post('/login', async (req, res) => {
