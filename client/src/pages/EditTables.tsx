@@ -15,10 +15,9 @@ export default function EditTables({ tableGroups, setTableGroups }: { tableGroup
         setLoading(true);
         try{
              const res = await api.patch(`/restaurants/${user.restaurantId}/table-groups/${group.id}`, {occupiedTables: addOrLess});
-        console.log(res.data)
         setTableGroups(res.data.tableGroups)
-        }catch(err){
-            console.log(err);
+        } catch {
+            return;
         } finally {
             setLoading(false)
         }

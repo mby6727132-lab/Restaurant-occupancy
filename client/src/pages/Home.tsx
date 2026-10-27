@@ -1,5 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext"
+import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import api from "../api/axios";
 import Search from "./Search";
@@ -8,18 +7,11 @@ import { getRestaurantImage, HERO_IMAGE } from "../utils/restaurantImage";
 import LoadingOverlay from "../components/LoadingOverlay";
 
 export default function Home() {
-    const { user, logout } = useAuth();
-    const navigate = useNavigate();
     const [restaurants, setRestaurants] = useState<any[]>([])
     const [error, setError] = useState<string>();
     const [loading, setLoading] = useState(true)
     const [results, setResults] = useState<any[] | null>(null);
 
-
-    const handleLogout = () => {
-        logout();
-        navigate("/login");
-    }
 
     useEffect(() => {
         const loadRestaurants = async () => {

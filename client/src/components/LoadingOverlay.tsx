@@ -1,4 +1,3 @@
-// שכבה שקופה על כל העמוד בזמן טעינה
 export default function LoadingOverlay() {
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-page/70 backdrop-blur-[2px]" role="status" aria-live="polite">

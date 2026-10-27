@@ -5,43 +5,40 @@ import LoadingOverlay from "../components/LoadingOverlay";
 import OccupancyRing from "../components/OccupancyRing";
 import { getRestaurantImage } from "../utils/restaurantImage";
 
-// קבוצה של שולחנות באותו גודל (למשל: כל השולחנות הזוגיים)
 type TableGroup = {
-    capacity: number;        // כמה כיסאות יש בכל שולחן בקבוצה
-    totalTables: number;     // כמה שולחנות מהגודל הזה יש בסך הכל
-    occupiedTables: number;  // כמה מהשולחנות האלה תפוסים
-    freeTables: number;      // כמה מהשולחנות האלה פנויים
-    freeSeats: number;       // כמה כיסאות פנויים יש בקבוצה הזו
+    capacity: number;
+    totalTables: number;
+    occupiedTables: number;
+    freeTables: number;
+    freeSeats: number;
 };
 
-// מצב התפוסה של כל המסעדה
 type Occupancy = {
-    totalSeats: number;       // סך כל הכיסאות במסעדה
-    occupiedSeats: number;    // כמה כיסאות תפוסים
-    freeSeats: number;        // כמה כיסאות פנויים
-    occupancyPercent: number; // אחוז התפוסה (0 עד 100)
-    totalTables: number;      // סך כל השולחנות במסעדה
-    occupiedTables: number;   // כמה שולחנות תפוסים
-    freeTables: number;       // כמה שולחנות פנויים
-    freeTablesByCapacity: TableGroup[]; // רשימה: פירוט השולחנות לפי גודל
+    totalSeats: number;
+    occupiedSeats: number;
+    freeSeats: number;
+    occupancyPercent: number;
+    totalTables: number;
+    occupiedTables: number;
+    freeTables: number;
+    freeTablesByCapacity: TableGroup[];
 };
 
-// מסעדה אחת, כפי שהיא מגיעה מהשרת
 type Restaurant = {
-    id: string;              // מזהה ייחודי (UUID: מחרוזת ארוכה, לא מספר)
-    name: string;            // שם המסעדה
-    ownerName: string;       // שם הבעלים
-    ownerPhone: string;      // טלפון הבעלים
-    street: string;          // רחוב ומספר
-    city: string;            // עיר
-    location: string;        // אזור
-    description: string;     // תיאור המסעדה
-    type: string;            // סוג: "MEAT" (בשרי) או חלבי
-    imageUrl: string;        // קישור לתמונה
-    isOwner: boolean;        // האם המשתמש המחובר הוא הבעלים (true/false)
-    createdAt: string;       // מתי המסעדה נוצרה (תאריך כמחרוזת)
-    updatedAt: string;       // מתי עודכנה לאחרונה
-    occupancy: Occupancy;    // מצב התפוסה (הטיפוס שמוגדר למעלה)
+    id: string;
+    name: string;
+    ownerName: string;
+    ownerPhone: string;
+    street: string;
+    city: string;
+    location: string;
+    description: string;
+    type: string;
+    imageUrl: string;
+    isOwner: boolean;
+    createdAt: string;
+    updatedAt: string;
+    occupancy: Occupancy;
 };
 
 export default function IsRestaurant() {
@@ -56,7 +53,6 @@ export default function IsRestaurant() {
         const loadRestaurant = async () => {
             try {
                 const res = await api.get(`/restaurants/${id}`);
-                console.log(res.data);
                 setRestaurant(res.data.restaurant);
             } catch {
                 setError("שגיאה בטעינת המסעדה");

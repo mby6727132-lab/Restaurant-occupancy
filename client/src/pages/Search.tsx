@@ -17,7 +17,6 @@ export default function Search({ restaurants, onSearch }: { restaurants: any[]; 
     const handleSearch = (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault()
         const res = restaurants.filter(r => (
-            // console.log(r)
             ((form.city === "" || r.city === form.city)
                 && (r.name == form.name || form.name == "")
                 && (r.type == form.type || form.type == "")

@@ -1,5 +1,3 @@
-// גלגל טבעת שמציג את אחוז התפוסה
-// ירוק מתחת ל-50%, כתום בין 50% ל-80%, אדום מעל 80%
 function ringColor(percent: number) {
     if (percent < 50) return "var(--color-occ-low)";
     if (percent <= 80) return "var(--color-occ-mid)";

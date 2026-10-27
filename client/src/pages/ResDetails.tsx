@@ -1,6 +1,5 @@
 import type { ReactNode } from "react";
 
-// אייקונים קטנים לשורות הפרטים
 const icons: Record<string, ReactNode> = {
     user: <><circle cx="12" cy="8" r="4" /><path d="M4 21a8 8 0 0 1 16 0" /></>,
     phone: <path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2" />,
@@ -17,7 +16,6 @@ function Icon({ name }: { name: string }) {
     )
 }
 
-// שורת פרט: אייקון ← תווית ← ערך
 function DetailRow({ icon, label, children }: { icon: string; label: string; children: ReactNode }) {
     return (
         <div className="grid grid-cols-[2.25rem_6rem_1fr] items-center gap-x-3 sm:grid-cols-[2.5rem_7.5rem_1fr]">
@@ -35,7 +33,6 @@ export default function ResDetails({ restaurant, tableGroups,onEdit }: { restaur
 
     return (
         <div className="card p-5 text-right sm:p-8">
-            {/* 1. כותרת */}
             <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[#eadfce] pb-5">
                 <div className="flex flex-wrap items-center gap-3">
                     <h2 className="page-title text-2xl sm:text-4xl">{restaurant.name}</h2>
@@ -44,7 +41,6 @@ export default function ResDetails({ restaurant, tableGroups,onEdit }: { restaur
                 <button className="btn btn-secondary btn-sm" onClick={onEdit}>עריכה</button>
             </div>
 
-            {/* 2. פרטים */}
             <dl className="space-y-4 py-7">
                 <DetailRow icon="user" label="בעל המסעדה">{restaurant.ownerName}</DetailRow>
                 <DetailRow icon="phone" label="טלפון"><bdi dir="ltr">{restaurant.ownerPhone}</bdi></DetailRow>
@@ -52,13 +48,11 @@ export default function ResDetails({ restaurant, tableGroups,onEdit }: { restaur
                 <DetailRow icon="utensils" label="סוג">{typeLabel}</DetailRow>
             </dl>
 
-            {/* 3. תיאור */}
             <div className="border-y border-[#eadfce] py-7">
                 <h3 className="section-title text-lg">על המסעדה</h3>
                 <p className="mt-3 max-w-2xl text-[15px] leading-loose text-stone-600 sm:text-base">{restaurant.description}</p>
             </div>
 
-            {/* 4. שולחנות */}
             <div className="pt-7">
                 <h3 className="section-title text-lg">שולחנות</h3>
                 <ul className="mt-4 space-y-3">

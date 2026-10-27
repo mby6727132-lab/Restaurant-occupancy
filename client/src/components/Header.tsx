@@ -10,7 +10,6 @@ export default function Header() {
             navigate("/login")
         }
 
-        // איזו אפשרות במתג מסומנת, לפי העמוד הנוכחי
         const isManager = pathname.startsWith("/myRestaurants");
         const isGuest = pathname === "/home" || pathname.startsWith("/home/");
 
