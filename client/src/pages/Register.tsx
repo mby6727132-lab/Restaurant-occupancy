@@ -36,7 +36,7 @@ export default function Register() {
         setLoading(true)
         try {
            await register(form);
-            navigate("/home");
+            navigate("/welcome");
 
         } catch (err: any) {
             setError(err.response?.data?.error?.message || "ההרשמה נכשלה");

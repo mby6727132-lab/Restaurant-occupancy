@@ -141,7 +141,7 @@
     @apply bg-stone-300/80;
   }
 
-  .table-pick {
-    @apply cursor-pointer rounded-xl p-2 transition select-none hover:-translate-y-0.5 hover:bg-white/70 hover:shadow-sm has-focus-visible:ring-4 has-focus-visible:ring-primary/25;
+  .table-chip {
+    @apply flex size-12 cursor-pointer items-center justify-center rounded-xl bg-primary font-semibold text-white transition select-none hover:bg-primary-dark has-checked:bg-stone-200 has-checked:text-stone-500 has-checked:hover:bg-stone-300 has-focus-visible:ring-4 has-focus-visible:ring-primary/20;
   }
 }

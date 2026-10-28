@@ -47,7 +47,6 @@ export default function Home() {
 
             <section className="space-y-5">
                 <div>
-                    <p className="eyebrow">מה פתוח עכשיו</p>
                     <h2 className="page-title mt-1">מסעדות</h2>
                 </div>
                 {results !== null && results.length === 0 && <p className="empty-state">לא נמצאו מסעדות תואמות לסינון</p>}
@@ -62,7 +61,6 @@ export default function Home() {
                                 <div className="min-w-0">
                                     <h3 className="truncate text-xl font-bold text-stone-900">{r.name}</h3>
                                     <p className="mt-1 text-sm text-stone-500">{r.city}</p>
-                                    <p className="mt-3 text-sm text-olive-dark"><span className="font-semibold">{r.occupancy.freeSeats}</span> כיסאות פנויים</p>
                                 </div>
                                 <OccupancyRing percent={r.occupancy.occupancyPercent} size={68} showLabel />
                             </div>

@@ -38,7 +38,13 @@ export default function ResDetails({ restaurant, tableGroups,onEdit }: { restaur
                     <h2 className="page-title text-2xl sm:text-4xl">{restaurant.name}</h2>
                     <span className={restaurant.type === "MEAT" ? "badge badge-meat" : "badge badge-dairy"}>{typeLabel}</span>
                 </div>
-                <button className="btn btn-secondary btn-sm" onClick={onEdit}>עריכה</button>
+                <button className="btn btn-primary px-6 shadow-lg shadow-primary/30 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-primary/35" onClick={onEdit}>
+                    <svg viewBox="0 0 24 24" className="size-[18px]" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                        <path d="M4 20h4L19 9l-4-4L4 16v4z" />
+                        <path d="M13.5 6.5l4 4" />
+                    </svg>
+                    עריכה
+                </button>
             </div>
 
             <dl className="space-y-4 py-7">

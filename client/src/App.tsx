@@ -5,6 +5,7 @@ import Home from "./pages/Home";
 import CreateRestaurant from "./pages/CreateRestaurant";
 import MainLayout from "./layouts/MainLayout";
 import IsRestaurant from "./pages/IsRestaurant";
+import Welcome from "./pages/Welcome";
 
 export default function App() {
   return (
@@ -13,6 +14,7 @@ export default function App() {
 
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/welcome" element={<Welcome />} />
         <Route element={<MainLayout />}>
           <Route path="/home" element={<Home />} />
           <Route path="/myRestaurants/new" element={<CreateRestaurant />} />

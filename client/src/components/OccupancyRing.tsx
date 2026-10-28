@@ -7,6 +7,7 @@ function ringColor(percent: number) {
 function ringLabel(percent: number) {
     if (percent < 50) return "יש מקום";
     if (percent <= 80) return "מתמלא";
+    if(percent===100)return "הכל מלא";
     return "כמעט מלא";
 }
 

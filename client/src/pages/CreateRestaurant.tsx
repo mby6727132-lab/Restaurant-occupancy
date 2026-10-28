@@ -97,6 +97,10 @@ export default function CreateRestaurant() {
                 setLoading(false)
             }
         }
+        if (!user?.restaurantId) {
+            setLoading(false)
+            return
+        };
         loadRestaurant()
     }, [user?.restaurantId])
 

@@ -7,7 +7,7 @@ export default function EditTables({ tableGroups, setTableGroups }: { tableGroup
 
     const { user } = useAuth()
     const [loading, setLoading] = useState(false)
-    const letters = "אבגד";
+    const letters = "123456789";
 
     const handleToggle = async (group: any, checked: boolean) => {
         let addOrLess = 0;
@@ -37,33 +37,22 @@ export default function EditTables({ tableGroups, setTableGroups }: { tableGroup
                     <span className="flex items-center gap-2"><span className="legend-dot bg-stone-200" />תפוס</span>
                 </div>
             </div>
-            <div className="floor-plan mt-6 space-y-6">
+            <div className="mt-6 space-y-6">
                 {tableGroups.map((group, index) => (
-                    <div key={group.id ?? `${group.capacity}-${index}`} className="border-t border-dashed border-[#e0d2bd] pt-6 first:border-0 first:pt-0">
-                        <h3 className="mb-3 font-sans text-sm font-medium text-stone-600">שולחנות של {group.capacity} כיסאות</h3>
-                        <div className="flex flex-wrap gap-3">
-                            {Array.from({ length: group.totalTables }).map((_, i) => {
-                                const chairClass = i < group.occupiedTables ? "chair chair-occupied" : "chair chair-free";
-                                return (
-                                    <label key={i} className="table-pick" aria-label={`שולחן ${letters[i] ?? i + 1}`}>
-                                        <input
-                                            className="sr-only"
-                                            type="checkbox"
-                                            checked={i < group.occupiedTables}
-                                            onChange={(e) => handleToggle(group, e.target.checked)}
-                                        />
-                                        <span className="table-seat">
-                                            <span className="chairs">
-                                                {Array.from({ length: Math.ceil(group.capacity / 2) }).map((_, c) => <span key={c} className={chairClass} />)}
-                                            </span>
-                                            <span className={i < group.occupiedTables ? "table-top table-occupied" : "table-top table-free"} />
-                                            <span className="chairs">
-                                                {Array.from({ length: Math.floor(group.capacity / 2) }).map((_, c) => <span key={c} className={chairClass} />)}
-                                            </span>
-                                        </span>
-                                    </label>
-                                );
-                            })}
+                    <div key={group.id ?? `${group.capacity}-${index}`}>
+                        <h3 className="mb-3 text-sm font-medium text-stone-600">שולחנות של {group.capacity} כיסאות</h3>
+                        <div className="flex flex-wrap gap-2">
+                            {Array.from({ length: group.totalTables }).map((_, i) => (
+                                <label key={i} className="table-chip">
+                                    <input
+                                        className="sr-only"
+                                        type="checkbox"
+                                        checked={i < group.occupiedTables}
+                                        onChange={(e) => handleToggle(group, e.target.checked)}
+                                    />
+                                    {letters[i] ?? i + 1}
+                                </label>
+                            ))}
                         </div>
                     </div>
                 ))}
